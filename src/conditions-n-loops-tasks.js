@@ -136,8 +136,55 @@ function convertToRomanNumerals(num) {
  *  '10,5'    => 'one zero point five'
  *  '1950.2'  => 'one nine five zero point two'
  */
-function convertNumberToString(/* numberStr */) {
-  throw new Error('Not implemented');
+function convertNumberToString(numberStr) {
+  let result = '';
+  for (let i = 0; i < numberStr.length; i += 1) {
+    const sign = numberStr[i];
+    switch (sign) {
+      case '-':
+        result += 'minus';
+        break;
+      case '.':
+      case ',':
+        result += 'point';
+        break;
+      case '0':
+        result += 'zero';
+        break;
+      case '1':
+        result += 'one';
+        break;
+      case '2':
+        result += 'two';
+        break;
+      case '3':
+        result += 'three';
+        break;
+      case '4':
+        result += 'four';
+        break;
+      case '5':
+        result += 'five';
+        break;
+      case '6':
+        result += 'six';
+        break;
+      case '7':
+        result += 'seven';
+        break;
+      case '8':
+        result += 'eight';
+        break;
+      case '9':
+        result += 'nine';
+        break;
+      default:
+    }
+    if (i !== numberStr.length - 1) {
+      result += ' ';
+    }
+  }
+  return result;
 }
 
 /**
@@ -280,8 +327,26 @@ function rotateMatrix(/* matrix */) {
  *  [2, 9, 5, 9]    => [2, 5, 9, 9]
  *  [-2, 9, 5, -3]  => [-3, -2, 5, 9]
  */
-function sortByAsc(/* arr */) {
-  throw new Error('Not implemented');
+function sortByAsc(arr) {
+  const resultArray = arr;
+  if (arr.length === 0) {
+    return arr;
+  }
+  const startArray = [];
+  const endArray = [];
+  const fElement = arr[0];
+  for (let i = 1; i < arr.length; i += 1) {
+    if (arr[i] > fElement) {
+      endArray[endArray.length] = arr[i];
+    } else {
+      startArray[startArray.length] = arr[i];
+    }
+  }
+  const result = [...sortByAsc(startArray), fElement, ...sortByAsc(endArray)];
+  for (let i = 0; i < arr.length; i += 1) {
+    resultArray[i] = result[i];
+  }
+  return resultArray;
 }
 
 /**
