@@ -62,8 +62,12 @@ function getMaxNumber(a, b, c) {
  * {x: 1, y: 1}, {x: 2, y: 8} => false
  * {x: 1, y: 1}, {x: 2, y: 8} => false
  */
-function canQueenCaptureKing(/* queen, king */) {
-  throw new Error('Not implemented');
+function canQueenCaptureKing(queen, king) {
+  return (
+    queen.x === king.x ||
+    queen.y === king.y ||
+    Math.abs(queen.x - king.x) === Math.abs(queen.y - king.y)
+  );
 }
 
 /**
@@ -265,8 +269,19 @@ function isContainNumber(num, digit) {
  *  [2, 3, 9, 5] => 2       => 2 + 3 === 5 then balance element is 9 and its index = 2
  *  [1, 2, 3, 4, 5] => -1   => no balance element
  */
-function getBalanceIndex(/* arr */) {
-  throw new Error('Not implemented');
+function getBalanceIndex(arr) {
+  let totalSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    totalSum += arr[i];
+  }
+
+  let currentSum = 0;
+  for (let i = 0; i < arr.length; i += 1) {
+    if (totalSum - currentSum - arr[i] === currentSum) return i;
+    currentSum += arr[i];
+  }
+
+  return -1;
 }
 
 /**
@@ -290,8 +305,48 @@ function getBalanceIndex(/* arr */) {
  *          [10, 9,  8,  7]
  *        ]
  */
-function getSpiralMatrix(/* size */) {
-  throw new Error('Not implemented');
+function getSpiralMatrix(size) {
+  const matrix = [];
+  for (let i = 0; i < size; i += 1) {
+    matrix[i] = [];
+    for (let j = 0; j < size; j += 1) {
+      matrix[i][j] = 0;
+    }
+  }
+
+  let num = 1;
+  let top = 0;
+  let bottom = size - 1;
+  let left = 0;
+  let right = size - 1;
+
+  while (num <= size * size) {
+    for (let i = left; i <= right; i += 1) {
+      matrix[top][i] = num;
+      num += 1;
+    }
+    top += 1;
+
+    for (let i = top; i <= bottom; i += 1) {
+      matrix[i][right] = num;
+      num += 1;
+    }
+    right -= 1;
+
+    for (let i = right; i >= left; i -= 1) {
+      matrix[bottom][i] = num;
+      num += 1;
+    }
+    bottom -= 1;
+
+    for (let i = bottom; i >= top; i -= 1) {
+      matrix[i][left] = num;
+      num += 1;
+    }
+    left += 1;
+  }
+
+  return matrix;
 }
 
 /**
@@ -309,8 +364,31 @@ function getSpiralMatrix(/* size */) {
  *    [7, 8, 9]         [9, 6, 3]
  *  ]                 ]
  */
-function rotateMatrix(/* matrix */) {
-  throw new Error('Not implemented');
+function rotateMatrix(matrix) {
+  const n = matrix.length;
+  const m = matrix;
+
+  for (let i = 0; i < n; i += 1) {
+    for (let j = i + 1; j < n; j += 1) {
+      const temp = m[i][j];
+      m[i][j] = m[j][i];
+      m[j][i] = temp;
+    }
+  }
+
+  for (let i = 0; i < n; i += 1) {
+    let left = 0;
+    let right = n - 1;
+    while (left < right) {
+      const temp = m[i][left];
+      m[i][left] = m[i][right];
+      m[i][right] = temp;
+      left += 1;
+      right -= 1;
+    }
+  }
+
+  return m;
 }
 
 /**
@@ -366,8 +444,28 @@ function sortByAsc(arr) {
  *  '012345', 3 => '024135' => '043215' => '031425'
  *  'qwerty', 3 => 'qetwry' => 'qtrewy' => 'qrwtey'
  */
-function shuffleChar(/* str, iterations */) {
-  throw new Error('Not implemented');
+function shuffleChar(str, iterations) {
+  const len = str.length;
+  let current = str;
+  let realIterations = iterations;
+
+  for (let i = 0; i < realIterations; i += 1) {
+    let left = '';
+    let right = '';
+
+    for (let ch = 0; ch < len; ch += 1) {
+      if (ch % 2 === 0) {
+        left += current[ch];
+      } else {
+        right += current[ch];
+      }
+    }
+
+    current = left + right;
+    if (current === str) realIterations = i + 1 + (iterations % (i + 1));
+  }
+
+  return current;
 }
 
 /**
@@ -387,10 +485,34 @@ function shuffleChar(/* str, iterations */) {
  * @param {number} number The source number
  * @returns {number} The nearest larger number, or original number if none exists.
  */
-function getNearestBigger(/* number */) {
-  throw new Error('Not implemented');
-}
+function getNearestBigger(number) {
+  const arr = [...String(number)];
+  for (let i = arr.length - 1; i > 0; i -= 1) {
+    const left = [];
+    for (let j = 0; j < i; j += 1) {
+      left.push(arr[j]);
+    }
 
+    const right = [];
+    for (let j = i; j < arr.length; j += 1) {
+      right.push(arr[j]);
+    }
+
+    if (left[left.length - 1] < right[0]) {
+      right.sort((a, b) => a - b);
+      const swapIndex = right.findIndex((x) => x > left[left.length - 1]);
+      [left[left.length - 1], right[swapIndex]] = [
+        right[swapIndex],
+        left[left.length - 1],
+      ];
+      return [...left, ...right].reduce(
+        (acc, curr) => acc * 10 + Number(curr),
+        0
+      );
+    }
+  }
+  return number;
+}
 module.exports = {
   isPositive,
   getMaxNumber,
